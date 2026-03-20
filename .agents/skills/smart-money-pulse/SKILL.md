@@ -1,14 +1,11 @@
 ---
 name: smart-money-pulse
 description: Track whale and institutional wallet flows across multiple chains, get ranked trading signals with confidence scores, and execute trades autonomously. Use when the user mentions tracking smart money, whale wallets, institutional flows, token accumulation, DeFi signals, on-chain trading, or wants to monitor cryptocurrency markets. Triggers on phrases like "track whale wallets", "smart money", "token flow analysis", "on-chain signals", "CEO dashboard", "trading signals", "PULSE", "Autonomous trading agent", or when building a crypto trading bot or on-chain analytics tool.
-version: 1.0.0
-author: Clawvader (@clawvader)
-compatibility:
-  - python: "3.12+"
-  - requires:
-      - mcp (Model Context Protocol)
-      - requests
-      - python-dotenv
+license: MIT
+metadata:
+  author: Clawvader
+  version: "1.0.0"
+compatibility: "Python 3.12+. Requires: requests, python-dotenv, mcp. Network access needed for API calls."
 ---
 
 # Smart Money Pulse Monitor — Agent Skill
