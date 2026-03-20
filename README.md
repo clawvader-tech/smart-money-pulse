@@ -31,7 +31,7 @@ By the time most traders notice significant wallet accumulation or distribution,
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/clawvader/smart-money-pulse.git
+git clone https://github.com/clawvader-tech/smart-money-pulse.git
 cd smart-money-pulse
 
 # 2. Set your Nansen API key
@@ -193,7 +193,7 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 
 <div align="center">
 
-**[⭐ Star this repo](https://github.com/clawvader/smart-money-pulse)** if you find it useful!
+**[⭐ Star this repo](https://github.com/clawvader-tech/smart-money-pulse)** if you find it useful!
 
 <p align="center">
   <sub>Built with the Nansen CLI</sub>
