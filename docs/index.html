@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Smart Money Pulse Monitor</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a0a14;--bg2:#0f0f1e;--gold:#d4af37;--gold2:#f0d060;--cyan:#00d4ff;--green:#00ff88;--red:#ff4466;--text:#e8e8f0;--text2:#8888a0;}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:Inter,system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+header{padding:20px 0;border-bottom:1px solid rgba(212,175,55,0.15)}
+.header-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px}
+.logo{display:flex;align-items:center;gap:12px;font-weight:700;font-size:18px;color:var(--gold)}
+.nav{display:flex;gap:28px}
+.nav a{color:var(--text2);text-decoration:none;font-size:14px;font-weight:500}
+.nav a:hover{color:var(--gold)}
+.hero{padding:80px 0 60px;text-align:center}
+.hero-badge{display:inline-block;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold);padding:6px 16px;border-radius:20px;font-size:12px;font-weight:600;letter-spacing:1px;margin-bottom:24px}
+.hero h1{font-size:clamp(36px,6vw,64px);font-weight:800;color:#fff;margin-bottom:12px;line-height:1.1}
+.hero h1 span{color:var(--gold)}
+.hero p{font-size:18px;color:var(--text2);max-width:600px;margin:0 auto 40px}
+.terminal{background:var(--bg2);border:1px solid rgba(255,255,255,0.08);border-radius:12px;overflow:hidden;max-width:700px;margin:0 auto 50px;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.terminal-bar{background:#1a1a2e;padding:12px 16px;display:flex;gap:8px}
+.terminal-dot{width:12px;height:12px;border-radius:50%}
+.dot-red{background:#ff5f56}.dot-yellow{background:#ffbd2e}.dot-green{background:#27c93f}
+.terminal-body{padding:20px 24px;font-family:Courier New,monospace;font-size:13px;color:#b0b0c0;text-align:left}
+.cmd{color:var(--green)}.prompt{color:var(--gold)}.header-row{color:var(--gold);font-weight:bold;margin-top:12px}
+.buy{color:var(--green)}.sell{color:var(--red)}.meta{color:var(--cyan);margin-top:8px}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 28px;border-radius:8px;font-weight:600;font-size:15px;text-decoration:none;transition:all 0.2s}
+.btn-primary{background:var(--gold);color:#000}
+.btn-primary:hover{background:var(--gold2);transform:translateY(-1px)}
+.btn-secondary{background:rgba(255,255,255,0.07);color:var(--text);border:1px solid rgba(255,255,255,0.12)}
+.hero-btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.features{padding:80px 0}
+.section-label{color:var(--gold);font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.section-title{font-size:36px;font-weight:700;color:#fff;margin-bottom:16px}
+.section-desc{color:var(--text2);font-size:16px;max-width:560px;margin-bottom:50px}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.feature-card{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:28px;transition:border-color 0.2s,transform 0.2s}
+.feature-card:hover{border-color:rgba(212,175,55,0.3);transform:translateY(-2px)}
+.feature-icon{font-size:32px;margin-bottom:16px}
+.feature-card h3{font-size:17px;font-weight:600;color:#fff;margin-bottom:8px}
+.feature-card p{font-size:14px;color:var(--text2)}
+.quickstart{padding:80px 0;background:var(--bg2)}
+.code-block{background:#0d0d1a;border:1px solid rgba(255,255,255,0.08);border-radius:10px;padding:24px;margin-top:30px;font-family:Courier New,monospace;font-size:14px;overflow-x:auto}
+.code-block .comment{color:#555}
+.chains{padding:60px 0}
+.chains-table{width:100%;border-collapse:collapse;margin-top:30px}
+.chains-table th,.chains-table td{padding:14px 16px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.06);font-size:14px}
+.chains-table th{color:var(--text2);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:1px}
+.chains-table tr:hover td{background:rgba(255,255,255,0.02)}
+.chain-badge{display:inline-block;padding:3px 10px;border-radius:12px;font-size:12px;font-weight:600}
+.chain-base{background:rgba(0,212,255,0.12);color:var(--cyan)}
+.chain-eth{background:rgba(98,126,234,0.15);color:#627eea}
+.chain-sol{background:rgba(153,69,255,0.12);color:#9945ff}
+.architecture{padding:80px 0;background:var(--bg2)}
+.arch-box{background:#08080f;border:1px solid rgba(212,175,55,0.2);border-radius:12px;padding:28px;margin-top:30px;font-family:Courier New,monospace;font-size:13px;color:#7070a0;text-align:left;overflow-x:auto}
+.arch-layer{color:var(--gold);font-weight:bold}
+.arch-comp{color:var(--cyan)}
+.cta{padding:80px 0;text-align:center}
+.cta h2{font-size:36px;font-weight:700;color:#fff;margin-bottom:16px}
+.cta p{color:var(--text2);margin-bottom:32px}
+footer{padding:40px 0;border-top:1px solid rgba(255,255,255,0.06);text-align:center;color:var(--text2);font-size:13px}
+footer a{color:var(--gold);text-decoration:none}
+@media(max-width:640px){.nav{display:none}.features-grid{grid-template-columns:1fr}}
+</style></head>
+<body>
+<header><div class="container header-inner">
+<div class="logo"><svg width="36" height="36" viewBox="0 0 36 36" fill="none"><circle cx="18" cy="18" r="16" stroke="#d4af37" stroke-width="2"/><circle cx="18" cy="18" r="4" fill="#d4af37"/><line x1="18" y1="2" x2="18" y2="8" stroke="#d4af37" stroke-width="2"/><line x1="18" y1="28" x2="18" y2="34" stroke="#d4af37" stroke-width="2"/><line x1="2" y1="18" x2="8" y2="18" stroke="#d4af37" stroke-width="2"/><line x1="28" y1="18" x2="34" y2="18" stroke="#d4af37" stroke-width="2"/></svg>Smart Money Pulse Monitor</div>
+<nav class="nav"><a href="#features">Features</a><a href="#quickstart">Quick Start</a><a href="#chains">Chains</a><a href="#architecture">Architecture</a></nav>
+</div></header>
+<section class="hero"><div class="container">
+<div class="hero-badge">NANSEN CLI BUILD CHALLENGE 2026</div>
+<h1>Smart Money <span>Pulse</span> Monitor</h1>
+<p>Track whale and institutional wallet flows in real-time via CLI. Powered by Nansen intelligence — built for agents and humans.</p>
+<div class="terminal"><div class="terminal-bar"><div class="terminal-dot dot-red"></div><div class="terminal-dot dot-yellow"></div><div class="terminal-dot dot-green"></div></div>
+<div class="terminal-body">
+<div><span class="prompt">$</span> <span class="cmd">python smart_money_pulse.py --chain base --top-n 5</span></div>
+<div class="header-row">  Rank  Token      Flow (24h)    Smart Money</div>
+<div class="header-row">  ----  ---------  -----------   -----------</div>
+<div>    1   <span class="buy">PENGU</span>    +,431,000    ACTIVE</div>
+<div>    2   <span class="buy">AERO</span>     +,872,000    ACTIVE</div>
+<div>    3   <span class="sell">BRETT</span>    -43,000     CAUTION</div>
+<div>    4   <span class="buy">DEGEN</span>    +21,000     ACTIVE</div>
+<div>    5   <span class="buy">VIRTUAL</span>  +98,000     CAUTION</div>
+<div class="meta">Confidence: 87%  |  Cycles: 56  |  Status: LIVE</div>
+</div></div>
+<div class="hero-btns"><a href="https://github.com" class="btn btn-primary">Star on GitHub</a><a href="#quickstart" class="btn btn-secondary">Get Started</a></div>
+</div></section>
+<section class="features" id="features"><div class="container">
+<div class="section-label">Features</div>
+<h2 class="section-title">Everything you need to track smart money</h2>
+<p class="section-desc">From real-time CLI signals to AI agent integration — built for traders and developers who need an edge.</p>
+<div class="features-grid">
+<div class="feature-card"><div class="feature-icon">📊</div><h3>Real-Time Signals</h3><p>Ranked trading opportunities with confidence scores, flow magnitudes, and smart money status. Updated continuously.</p></div>
+<div class="feature-card"><div class="feature-icon">🤖</div><h3>MCP Server</h3><p>Model Context Protocol integration — connect any AI agent (Claude, GPT, Gemini) to Atlas for autonomous trading decisions.</p></div>
+<div class="feature-card"><div class="feature-icon">💳</div><h3>x402 Payments</h3><p>Native crypto micropayments. Agents pay per API call. No accounts, no subscriptions — usage-based pricing.</p></div>
+<div class="feature-card"><div class="feature-icon">🖥️</div><h3>CEO Dashboard</h3><p>World-class HTML dashboard with signal feed, trade history, positions, system health, and OKX wallet widget.</p></div>
+<div class="feature-card"><div class="feature-icon">⛓️</div><h3>Multi-Chain</h3><p>Base-native with Ethereum and Solana support. All major L2s and DeFi chains coming soon.</p></div>
+<div class="feature-card"><div class="feature-icon">🔒</div><h3>Secure by Design</h3><p>No API keys in code. Environment-based config. OKX wallet integration with local signing. Your keys stay yours.</p></div>
+</div></div></section>
+<section class="quickstart" id="quickstart"><div class="container">
+<div class="section-label">Quick Start</div>
+<h2 class="section-title">Up and running in 60 seconds</h2>
+<p class="section-desc">One command to install. One command to run.</p>
+<div class="code-block">
+<div><span class="comment"># 1. Clone the repo</span></div>
+<div><span class="cmd">git clone https://github.com/your-username/smart-money-pulse.git</span></div>
+<div><span class="cmd">cd smart-money-pulse</span></div>
+<br>
+<div><span class="comment"># 2. Install dependencies</span></div>
+<div><span class="cmd">pip install -r requirements.txt</span></div>
+<br>
+<div><span class="comment"># 3. Set your API keys</span></div>
+<div><span class="cmd">cp .env.example .env</span></div>
+<div><span class="comment"># Edit .env with your NANSEN_API_KEY</span></div>
+<br>
+<div><span class="comment"># 4. Run!</span></div>
+<div><span class="cmd">python smart_money_pulse.py --chain base --top-n 5</span></div>
+</div></div></section>
+<section class="chains" id="chains"><div class="container">
+<div class="section-label">Supported Chains</div>
+<h2 class="section-title">Multi-chain coverage</h2>
+<table class="chains-table"><thead><tr><th>Chain</th><th>Status</th><th>Smart Money</th><th>Signals</th></tr></thead>
+<tbody>
+<tr><td><span class="chain-badge chain-base">Base</span></td><td>Primary</td><td>Nansen-native</td><td>Full support</td></tr>
+<tr><td><span class="chain-badge chain-eth">Ethereum</span></td><td>Supported</td><td>Nansen-native</td><td>Full support</td></tr>
+<tr><td><span class="chain-badge chain-sol">Solana</span></td><td>Coming soon</td><td>Limited</td><td>Basic signals</td></tr>
+</tbody></table></div></section>
+<section class="architecture" id="architecture"><div class="container">
+<div class="section-label">Architecture</div>
+<h2 class="section-title">How it works</h2>
+<div class="arch-box">
+<span class="arch-layer">[DATA SOURCES]</span>  <span class="arch-comp">CoinGecko, OKX, Nansen API</span><br>
+<span class="arch-arrow">          |</span><br>
+<span class="arch-layer">[LLM REASONING]</span>  <span class="arch-comp">minimax-m2.7 via OpenRouter</span><br>
+<span class="arch-arrow">          |</span><br>
+<span class="arch-layer">[ATLAS ORCHESTRATOR]</span>  <span class="arch-comp">Cycle management, auto-restart</span><br>
+<span class="arch-arrow">          |</span><br>
+<span class="arch-layer">[OUTPUTS]</span>  <span class="arch-comp">CLI signals, Dashboard, MCP, x402</span>
+</div></div></section>
+<section class="cta"><div class="container">
+<h2>Ready to track smart money?</h2>
+<p>Star the repo and get started in under a minute.</p>
+<a href="https://github.com" class="btn btn-primary">Star on GitHub</a>
+</div></section>
+<footer><div class="container">
+<p>Built for the <a href="#">Nansen CLI Build Challenge 2026</a> | MIT License</p>
+</div></footer>
+</body></html>

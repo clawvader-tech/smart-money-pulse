@@ -1,0 +1,11 @@
+.env
+.env.*
+__pycache__/
+*.pyc
+*.log
+.DS_Store
+*.keys
+api_keys/
+keys/
+node_modules/
+.vscode/
