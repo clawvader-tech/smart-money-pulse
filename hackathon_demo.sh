@@ -44,8 +44,8 @@ echo ""
 echo "═══════════════════════════════════════════════════════════════"
 echo ""
 
-if [ -f "pulse_dashboard.md" ]; then
-    cat pulse_dashboard.md
+if [ -f "dashboard.html" ]; then
+    cat dashboard.html
 else
     echo "❌ Dashboard file not found!"
     exit 1
@@ -59,7 +59,7 @@ echo ""
 echo "✅ DEMO COMPLETE!"
 echo ""
 echo "📁 Files Generated:"
-echo "   • pulse_dashboard.md — Full markdown report"
+echo "   • dashboard.html — Full markdown report"
 echo ""
 echo "📊 Nansen API Usage:"
 echo "   • Smart Money Netflow Query: 5 credits"

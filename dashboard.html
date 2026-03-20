@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Atlas - AI Trading Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #12121a;
+            --bg-card: #1a1a25;
+            --bg-card-hover: #252535;
+            --bg-header: #0d0d14;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0b0;
+            --text-muted: #6a6a7a;
+            --accent-gold: #d4af37;
+            --accent-gold-light: #f0d878;
+            --accent-gold-dark: #a08020;
+            --accent-green: #00d084;
+            --accent-green-dark: #00a060;
+            --accent-red: #ff4757;
+            --accent-red-dark: #cc303f;
+            --accent-blue: #3498db;
+            --border-color: #2a2a3a;
+            --border-gold: rgba(212, 175, 55, 0.3);
+            --shadow-gold: rgba(212, 175, 55, 0.15);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            background: linear-gradient(135deg, #0a0a0f 0%, #12121a 50%, #0d0d14 100%);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        /* Header */
+        .header {
+            background: var(--bg-header);
+            border-bottom: 1px solid var(--border-gold);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+        
+        .header-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logo {
+            font-size: 1.75rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-gold-light) 50%, var(--accent-gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+        
+        .logo span {
+            font-weight: 300;
+            opacity: 0.8;
+        }
+        
+        .live-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 208, 132, 0.1);
+            border: 1px solid var(--accent-green);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); box-shadow: 0 0 0 0 rgba(0, 208, 132, 0.7); }
+            50% { opacity: 0.8; transform: scale(1.1); box-shadow: 0 0 0 8px rgba(0, 208, 132, 0); }
+        }
+        
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+        
+        .current-time {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .mode-indicator {
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid var(--accent-gold);
+            color: var(--accent-gold);
+            padding: 0.4rem 1rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        /* Quick Stats Bar */
+        .stats-bar {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 2rem;
+        }
+        
+        .stats-bar-content {
+            max-width: 1600px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .stat-label-small {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .stat-value-large {
+            font-size: 1.5rem;
+            font-weight: 700;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .stat-value-large.positive { color: var(--accent-green); }
+        .stat-value-large.negative { color: var(--accent-red); }
+        .stat-value-large.gold { color: var(--accent-gold); }
+        
+        /* Main Container */
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .dashboard-grid-secondary {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .dashboard-grid-secondary { grid-template-columns: 1fr; }
+        }
+        
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .card:hover {
+            border-color: var(--border-gold);
+            box-shadow: 0 4px 20px var(--shadow-gold);
+        }
+        
+        .card-header {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .card-title-icon {
+            color: var(--accent-gold);
+        }
+        
+        .card-badge {
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--accent-gold);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        
+        .card-body {
+            padding: 1rem;
+        }
+        
+        /* Tables */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+        }
+        
+        .data-table th {
+            text-align: left;
+            padding: 0.75rem;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table td {
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+        }
+        
+        .data-table tr:hover td {
+            background: var(--bg-card-hover);
+            color: var(--text-primary);
+        }
+        
+        .data-table tr:last-child td {
+            border-bottom: none;
+        }
+        
+        /* Signal Styling */
+        .signal-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        
+        .signal-buy {
+            background: rgba(0, 208, 132, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .signal-sell {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+        }
+        
+        .confidence-bar {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .confidence-track {
+            width: 60px;
+            height: 4px;
+            background: var(--bg-secondary);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        
+        .confidence-fill {
+            height: 100%;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+        
+        .confidence-fill.high { background: var(--accent-green); }
+        .confidence-fill.medium { background: var(--accent-gold); }
+        .confidence-fill.low { background: var(--accent-red); }
+        
+        /* Token Display */
+        .token-cell {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .token-icon {
+            width: 28px;
+            height: 28px;
+            background: linear-gradient(135deg, var(--accent-gold-dark), var(--accent-gold));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.7rem;
+            color: var(--bg-primary);
+        }
+        
+        .token-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .token-symbol {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .token-name {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .chain-badge {
+            font-size: 0.7rem;
+            color: var(--accent-gold);
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+        }
+        
+        /* P&L Display */
+        .pnl-positive { color: var(--accent-green); }
+        .pnl-negative { color: var(--accent-red); }
+        
+        .pnl-arrow {
+            font-size: 0.8rem;
+            margin-right: 0.2rem;
+        }
+        
+        /* Smart Money Status */
+        .smart-money-status {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        
+        .smart-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+        }
+        
+        .smart-dot.accumulating { background: var(--accent-green); box-shadow: 0 0 6px var(--accent-green); }
+        .smart-dot.distributing { background: var(--accent-red); box-shadow: 0 0 6px var(--accent-red); }
+        .smart-dot.neutral { background: var(--text-muted); }
+        
+        /* Trade History */
+        .trade-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .trade-row:last-child {
+            border-bottom: none;
+        }
+        
+        .trade-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .trade-action-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+        }
+        
+        .trade-action-icon.buy {
+            background: rgba(0, 208, 132, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .trade-action-icon.sell {
+            background: rgba(255, 71, 87, 0.15);
+            color: var(--accent-red);
+        }
+        
+        .trade-details {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .trade-token-name {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .trade-meta {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+        
+        .trade-result {
+            text-align: right;
+        }
+        
+        .trade-amount {
+            font-weight: 600;
+            color: var(--text-primary);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .trade-pnl {
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        /* Positions */
+        .position-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+        }
+        
+        .position-card:last-child {
+            margin-bottom: 0;
+        }
+        
+        .position-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .position-token {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .position-status {
+            font-size: 0.7rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+        
+        .position-status.open {
+            background: rgba(0, 208, 132, 0.15);
+            color: var(--accent-green);
+        }
+        
+        .position-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.75rem;
+        }
+        
+        .position-metric {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .position-metric-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            margin-bottom: 0.1rem;
+        }
+        
+        .position-metric-value {
+            font-size: 0.85rem;
+            font-weight: 600;
+            font-variant-numeric: tabular-nums;
+        }
+        
+        /* System Health */
+        .health-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+        
+        .health-item {
+            background: var(--bg-secondary);
+            border-radius: 8px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+        
+        .health-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+        }
+        
+        .health-value {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+        
+        .health-status {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+        }
+        
+        .health-status.ok { color: var(--accent-green); }
+        .health-status.warning { color: var(--accent-gold); }
+        .health-status.error { color: var(--accent-red); }
+        
+        /* OKX Wallet Card */
+        .wallet-card {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+            border: 1px solid var(--border-gold);
+        }
+        
+        .wallet-header {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .wallet-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+        
+        .wallet-title {
+            font-weight: 600;
+        }
+        
+        .wallet-address {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .wallet-balance {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem 0;
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 1rem;
+        }
+        
+        .balance-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .balance-label {
+            font-size: 0.7rem;
+            color: var(--text-muted);
+        }
+        
+        .balance-value {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        .btn {
+            width: 100%;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-gold-dark));
+            color: var(--bg-primary);
+        }
+        
+        .btn-primary:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px var(--shadow-gold);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* Refresh Indicator */
+        .refresh-indicator {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            z-index: 1000;
+        }
+        
+        .refresh-spinner {
+            width: 14px;
+            height: 14px;
+            border: 2px solid var(--border-color);
+            border-top-color: var(--accent-gold);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .header-right {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+            
+            .stats-bar-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .container {
+                padding: 1rem;
+            }
+            
+            .data-table {
+                font-size: 0.75rem;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 0.5rem;
+            }
+            
+            .position-metrics {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-section">
+                <div class="logo">PROJECT <span>ATLAS</span></div>
+                <div class="live-badge">
+                    <span class="live-dot"></span>
+                    LIVE
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="current-time" id="currentTime">--:--:-- UTC</div>
+                <div class="mode-indicator">🤖 AI Trading Agent</div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- Quick Stats Bar -->
+    <div class="stats-bar">
+        <div class="stats-bar-content">
+            <div class="stat-item">
+                <span class="stat-label-small">Total P&L</span>
+                <span class="stat-value-large positive" id="totalPnl">+$12,456.78</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label-small">Win Rate</span>
+                <span class="stat-value-large gold" id="winRate">72.5%</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label-small">Total Trades</span>
+                <span class="stat-value-large" id="totalTrades">156</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label-small">Active Signals</span>
+                <span class="stat-value-large positive" id="activeSignals">8</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label-small">Cycles Completed</span>
+                <span class="stat-value-large" id="cyclesCompleted">2,847</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label-small">Smart Money Tracked</span>
+                <span class="stat-value-large gold" id="smartMoneyTracked">2.4M</span>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Dashboard -->
+    <div class="container">
+        <!-- Primary Grid: Signal Feed + Trade History -->
+        <div class="dashboard-grid">
+            <!-- Signal Feed -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📡</span>
+                        Signal Feed
+                    </div>
+                    <span class="card-badge">LIVE</span>
+                </div>
+                <div class="card-body">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Rank</th>
+                                <th>Token</th>
+                                <th>Chain</th>
+                                <th>Signal</th>
+                                <th>Confidence</th>
+                                <th>Flow ($)</th>
+                                <th>Smart Money</th>
+                                <th>Time</th>
+                            </tr>
+                        </thead>
+                        <tbody id="signalFeed">
+                            <tr>
+                                <td><strong style="color: var(--accent-gold)">#1</strong></td>
+                                <td>
+                                    <div class="token-cell">
+                                        <div class="token-icon">H</div>
+                                        <div class="token-info">
+                                            <span class="token-symbol">HYPE</span>
+                                            <span class="token-name">Hyperliquid</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="chain-badge">Base</span></td>
+                                <td><span class="signal-badge signal-buy">▲ BUY</span></td>
+                                <td>
+                                    <div class="confidence-bar">
+                                        <span>94%</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill high" style="width: 94%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-variant-numeric: tabular-nums;">+$2.4M</td>
+                                <td>
+                                    <div class="smart-money-status">
+                                        <span class="smart-dot accumulating"></span>
+                                        <span>Accumulating</span>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.75rem; color: var(--text-muted);">2 min ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--accent-gold)">#2</strong></td>
+                                <td>
+                                    <div class="token-cell">
+                                        <div class="token-icon">T</div>
+                                        <div class="token-info">
+                                            <span class="token-symbol">TAO</span>
+                                            <span class="token-name">Bittensor</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="chain-badge">Base</span></td>
+                                <td><span class="signal-badge signal-buy">▲ BUY</span></td>
+                                <td>
+                                    <div class="confidence-bar">
+                                        <span>89%</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill high" style="width: 89%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-variant-numeric: tabular-nums;">+$1.8M</td>
+                                <td>
+                                    <div class="smart-money-status">
+                                        <span class="smart-dot accumulating"></span>
+                                        <span>Accumulating</span>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.75rem; color: var(--text-muted);">5 min ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--text-muted)">#3</strong></td>
+                                <td>
+                                    <div class="token-cell">
+                                        <div class="token-icon">P</div>
+                                        <div class="token-info">
+                                            <span class="token-symbol">PENGU</span>
+                                            <span class="token-name">Pudgy Penguins</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="chain-badge">Base</span></td>
+                                <td><span class="signal-badge signal-buy">▲ BUY</span></td>
+                                <td>
+                                    <div class="confidence-bar">
+                                        <span>85%</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill high" style="width: 85%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-variant-numeric: tabular-nums;">+$1.2M</td>
+                                <td>
+                                    <div class="smart-money-status">
+                                        <span class="smart-dot accumulating"></span>
+                                        <span>Accumulating</span>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.75rem; color: var(--text-muted);">8 min ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--text-muted)">#4</strong></td>
+                                <td>
+                                    <div class="token-cell">
+                                        <div class="token-icon">B</div>
+                                        <div class="token-info">
+                                            <span class="token-symbol">BTC</span>
+                                            <span class="token-name">Bitcoin</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="chain-badge">Base</span></td>
+                                <td><span class="signal-badge signal-sell">▼ SELL</span></td>
+                                <td>
+                                    <div class="confidence-bar">
+                                        <span>78%</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill medium" style="width: 78%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-variant-numeric: tabular-nums;">-$890K</td>
+                                <td>
+                                    <div class="smart-money-status">
+                                        <span class="smart-dot distributing"></span>
+                                        <span>Distributing</span>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.75rem; color: var(--text-muted);">12 min ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--text-muted)">#5</strong></td>
+                                <td>
+                                    <div class="token-cell">
+                                        <div class="token-icon">E</div>
+                                        <div class="token-info">
+                                            <span class="token-symbol">ETH</span>
+                                            <span class="token-name">Ethereum</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="chain-badge">Base</span></td>
+                                <td><span class="signal-badge signal-buy">▲ BUY</span></td>
+                                <td>
+                                    <div class="confidence-bar">
+                                        <span>72%</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill medium" style="width: 72%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-variant-numeric: tabular-nums;">+$650K</td>
+                                <td>
+                                    <div class="smart-money-status">
+                                        <span class="smart-dot accumulating"></span>
+                                        <span>Accumulating</span>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.75rem; color: var(--text-muted);">15 min ago</td>
+                            </tr>
+                            <tr>
+                                <td><strong style="color: var(--text-muted)">#6</strong></td>
+                                <td>
+                                    <div class="token-cell">
+                                        <div class="token-icon">A</div>
+                                        <div class="token-info">
+                                            <span class="token-symbol">AAVE</span>
+                                            <span class="token-name">Aave</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><span class="chain-badge">Base</span></td>
+                                <td><span class="signal-badge signal-sell">▼ SELL</span></td>
+                                <td>
+                                    <div class="confidence-bar">
+                                        <span>68%</span>
+                                        <div class="confidence-track">
+                                            <div class="confidence-fill medium" style="width: 68%"></div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="font-variant-numeric: tabular-nums;">-$420K</td>
+                                <td>
+                                    <div class="smart-money-status">
+                                        <span class="smart-dot distributing"></span>
+                                        <span>Distributing</span>
+                                    </div>
+                                </td>
+                                <td style="font-size: 0.75rem; color: var(--text-muted);">18 min ago</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+            <!-- Trade History -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">📊</span>
+                        Trade History
+                    </div>
+                    <span class="card-badge">RECENT</span>
+                </div>
+                <div class="card-body" id="tradeHistory">
+                    <div class="trade-row">
+                        <div class="trade-info">
+                            <div class="trade-action-icon buy">▲</div>
+                            <div class="trade-details">
+                                <span class="trade-token-name">HYPE</span>
+                                <span class="trade-meta">Hyperliquid • Limit Order</span>
+                            </div>
+                        </div>
+                        <div class="trade-result">
+                            <div class="trade-amount">$2,400</div>
+                            <div class="trade-pnl pnl-positive">▲ +$245.50</div>
+                        </div>
+                    </div>
+                    <div class="trade-row">
+                        <div class="trade-info">
+                            <div class="trade-action-icon buy">▲</div>
+                            <div class="trade-details">
+                                <span class="trade-token-name">TAO</span>
+                                <span class="trade-meta">Bittensor • Market Order</span>
+                            </div>
+                        </div>
+                        <div class="trade-result">
+                            <div class="trade-amount">$1,800</div>
+                            <div class="trade-pnl pnl-positive">▲ +$128.40</div>
+                        </div>
+                    </div>
+                    <div class="trade-row">
+                        <div class="trade-info">
+                            <div class="trade-action-icon sell">▼</div>
+                            <div class="trade-details">
+                                <span class="trade-token-name">BTC</span>
+                                <span class="trade-meta">Bitcoin • Take Profit</span>
+                            </div>
+                        </div>
+                        <div class="trade-result">
+                            <div class="trade-amount">$3,200</div>
+                            <div class="trade-pnl pnl-positive">▲ +$412.80</div>
+                        </div>
+                    </div>
+                    <div class="trade-row">
+                        <div class="trade-info">
+                            <div class="trade-action-icon buy">▲</div>
+                            <div class="trade-details">
+                                <span class="trade-token-name">PENGU</span>
+                                <span class="trade-meta">Pudgy Penguins • Market Order</span>
+                            </div>
+                        </div>
+                        <div class="trade-result">
+                            <div class="trade-amount">$950</div>
+                            <div class="trade-pnl pnl-negative">▼ -$42.30</div>
+                        </div>
+                    </div>
+                    <div class="trade-row">
+                        <div class="trade-info">
+                            <div class="trade-action-icon sell">▼</div>
+                            <div class="trade-details">
+                                <span class="trade-token-name">AAVE</span>
+                                <span class="trade-meta">Aave • Stop Loss</span>
+                            </div>
+                        </div>
+                        <div class="trade-result">
+                            <div class="trade-amount">$1,100</div>
+                            <div class="trade-pnl pnl-negative">▼ -$87.50</div>
+                        </div>
+                    </div>
+                    <div class="trade-row">
+                        <div class="trade-info">
+                            <div class="trade-action-icon buy">▲</div>
+                            <div class="trade-details">
+                                <span class="trade-token-name">ETH</span>
+                                <span class="trade-meta">Ethereum • DCA Order</span>
+                            </div>
+                        </div>
+                        <div class="trade-result">
+                            <div class="trade-amount">$1,500</div>
+                            <div class="trade-pnl pnl-positive">▲ +$93.20</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Secondary Grid: Open Positions, System Health, OKX Wallet -->
+        <div class="dashboard-grid-secondary">
+            <!-- Open Positions -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">💼</span>
+                        Open Positions
+                    </div>
+                    <span class="card-badge">5 ACTIVE</span>
+                </div>
+                <div class="card-body" id="openPositions">
+                    <div class="position-card">
+                        <div class="position-header">
+                            <div class="position-token">
+                                <div class="token-icon" style="width: 24px; height: 24px; font-size: 0.6rem;">H</div>
+                                HYPE
+                            </div>
+                            <span class="position-status open">OPEN</span>
+                        </div>
+                        <div class="position-metrics">
+                            <div class="position-metric">
+                                <span class="position-metric-label">Entry</span>
+                                <span class="position-metric-value">$14.25</span>
+                            </div>
+                            <div class="position-metric">
+                                <span class="position-metric-label">Current</span>
+                                <span class="position-metric-value">$15.82</span>
+                            </div>
+                            <div class="position-metric">
+                                <span class="position-metric-label">P&L</span>
+                                <span class="position-metric-value pnl-positive">+11.0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-card">
+                        <div class="position-header">
+                            <div class="position-token">
+                                <div class="token-icon" style="width: 24px; height: 24px; font-size: 0.6rem;">T</div>
+                                TAO
+                            </div>
+                            <span class="position-status open">OPEN</span>
+                        </div>
+                        <div class="position-metrics">
+                            <div class="position-metric">
+                                <span class="position-metric-label">Entry</span>
+                                <span class="position-metric-value">$342.50</span>
+                            </div>
+                            <div class="position-metric">
+                                <span class="position-metric-label">Current</span>
+                                <span class="position-metric-value">$367.20</span>
+                            </div>
+                            <div class="position-metric">
+                                <span class="position-metric-label">P&L</span>
+                                <span class="position-metric-value pnl-positive">+7.2%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="position-card">
+                        <div class="position-header">
+                            <div class="position-token">
+                                <div class="token-icon" style="width: 24px; height: 24px; font-size: 0.6rem;">P</div>
+                                PENGU
+                            </div>
+                            <span class="position-status open">OPEN</span>
+                        </div>
+                        <div class="position-metrics">
+                            <div class="position-metric">
+                                <span class="position-metric-label">Entry</span>
+                                <span class="position-metric-value">$0.0284</span>
+                            </div>
+                            <div class="position-metric">
+                                <span class="position-metric-label">Current</span>
+                                <span class="position-metric-value">$0.0271</span>
+                            </div>
+                            <div class="position-metric">
+                                <span class="position-metric-label">P&L</span>
+                                <span class="position-metric-value pnl-negative">-4.6%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- System Health -->
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span class="card-title-icon">🖥️</span>
+                        System Health
+                    </div>
+                    <span class="card-badge" style="background: rgba(0, 208, 132, 0.15); color: var(--accent-green);">HEALTHY</span>
+                </div>
+                <div class="card-body">
+                    <div class="health-grid" id="systemHealth">
+                        <div class="health-item">
+                            <span class="health-label">Cycle Count</span>
+                            <span class="health-value">2,847</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">Avg Cycle Time</span>
+                            <span class="health-value">4.2s</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">Error Count</span>
+                            <span class="health-value" style="color: var(--accent-green);">0</span>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">Nansen Credits</span>
+                            <div class="health-status ok">
+                                <span>●</span>
+                                <span>847 / 1000</span>
+                            </div>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">OKX Status</span>
+                            <div class="health-status ok">
+                                <span>●</span>
+                                <span>Connected</span>
+                            </div>
+                        </div>
+                        <div class="health-item">
+                            <span class="health-label">Uptime</span>
+                            <span class="health-value">47h 23m</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- OKX Wallet -->
+            <div class="card wallet-card">
+                <div class="card-header">
+                    <div class="card-title">
+                        <span style="color: var(--accent-gold);">👛</span>
+                        OKX Wallet
+                    </div>
+                </div>
+                <div class="card-body">
+                    <div class="wallet-header">
+                        <div class="wallet-icon">🦊</div>
+                        <div>
+                            <div class="wallet-title">Connected</div>
+                            <div class="wallet-address">0xc800...8c2E</div>
+                        </div>
+                    </div>
+                    <div class="wallet-balance">
+                        <div class="balance-item">
+                            <span class="balance-label">USDC Balance</span>
+                            <span class="balance-value">$24,582</span>
+                        </div>
+                        <div class="balance-item" style="text-align: right;">
+                            <span class="balance-label">Portfolio</span>
+                            <span class="balance-value">$48,391</span>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" disabled>
+                        ⚡ Execute Trade (Coming Soon)
+                    </button>
+                    <p style="font-size: 0.7rem; color: var(--text-muted); text-align: center; margin-top: 0.75rem;">
+                        Paper trading mode enabled. Live trading requires confirmation.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Refresh Indicator -->
+    <div class="refresh-indicator" id="refreshIndicator">
+        <div class="refresh-spinner"></div>
+        <span>Auto-refreshing in <span id="refreshCountdown">30</span>s</span>
+    </div>
+    
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            const utcTime = now.toISOString().slice(11, 19);
+            document.getElementById('currentTime').textContent = utcTime + ' UTC';
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // Auto-refresh countdown
+        let countdown = 30;
+        const countdownEl = document.getElementById('refreshCountdown');
+        
+        setInterval(() => {
+            countdown--;
+            if (countdown <= 0) {
+                countdown = 30;
+                refreshData();
+            }
+            countdownEl.textContent = countdown;
+        }, 1000);
+        
+        // Simulate data refresh
+        function refreshData() {
+            // Simulate slight variations in stats
+            const winRate = 70 + Math.random() * 5;
+            document.getElementById('winRate').textContent = winRate.toFixed(1) + '%';
+            
+            const cycles = 2847 + Math.floor(Math.random() * 10);
+            document.getElementById('cyclesCompleted').textContent = cycles.toLocaleString();
+            
+            const activeSignals = 6 + Math.floor(Math.random() * 5);
+            document.getElementById('activeSignals').textContent = activeSignals;
+            
+            // Flash effect on refresh
+            const indicator = document.getElementById('refreshIndicator');
+            indicator.style.borderColor = 'var(--accent-gold)';
+            setTimeout(() => {
+                indicator.style.borderColor = 'var(--border-color)';
+            }, 500);
+        }
+        
+        // Simulate live signal updates
+        setInterval(() => {
+            const signalFeed = document.getElementById('signalFeed');
+            const rows = signalFeed.querySelectorAll('tr');
+            
+            // Randomly update a confidence value
+            const randomRow = rows[Math.floor(Math.random() * rows.length)];
+            const confidenceFill = randomRow.querySelector('.confidence-fill');
+            const confidenceSpan = randomRow.querySelector('.confidence-bar span');
+            
+            if (confidenceFill && confidenceSpan) {
+                const newConfidence = 60 + Math.floor(Math.random() * 35);
+                confidenceFill.style.width = newConfidence + '%';
+                confidenceSpan.textContent = newConfidence + '%';
+                
+                // Update color based on confidence
+                confidenceFill.className = 'confidence-fill';
+                if (newConfidence >= 80) confidenceFill.classList.add('high');
+                else if (newConfidence >= 70) confidenceFill.classList.add('medium');
+                else confidenceFill.classList.add('low');
+            }
+        }, 5000);
+    </script>
+</body>
+</html>
