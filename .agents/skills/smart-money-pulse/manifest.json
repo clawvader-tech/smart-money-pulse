@@ -1,0 +1,45 @@
+{
+  "name": "smart-money-pulse",
+  "version": "1.0.0",
+  "description": "Track whale and institutional wallet flows across multiple chains, get ranked trading signals with confidence scores, and execute trades autonomously. Works with AI agents via MCP Server or direct CLI integration.",
+  "author": "Clawvader (@clawvader)",
+  "license": "MIT",
+  "homepage": "https://github.com/clawvader-tech/smart-money-pulse",
+  "download_url": "https://github.com/clawvader-tech/smart-money-pulse/archive/refs/heads/main.zip",
+  "triggers": [
+    "track whale wallets",
+    "smart money",
+    "token flow analysis",
+    "on-chain signals",
+    "CEO dashboard",
+    "trading signals",
+    "PULSE",
+    "Autonomous trading agent",
+    "cryptocurrency trading bot",
+    "on-chain analytics",
+    "whale accumulation",
+    "institutional wallet"
+  ],
+  "compatibility": {
+    "python": "3.12+",
+    "dependencies": ["requests", "python-dotenv", "mcp"]
+  },
+  "files": [
+    "smart_money_pulse.py",
+    "mcp_server.py",
+    "payment_gateway.py",
+    "dashboard.html",
+    "chain_data.py",
+    "requirements.txt"
+  ],
+  "mcp_tools": [
+    "get_signals",
+    "get_positions",
+    "get_trade_history",
+    "get_system_status",
+    "execute_trade",
+    "get_wallet_balance"
+  ],
+  "chains": ["base", "ethereum", "solana", "arbitrum", "optimism"],
+  "tags": ["crypto", "trading", "on-chain", "whale-tracking", "MCP", "autonomous-trading"]
+}

@@ -79,6 +79,43 @@ AI agents connect via Model Context Protocol:
 - get_system_status()          # Health & metrics
 ```
 
+## AI Agent Integration — agentskills.io
+
+The skill is **agentskills.io compliant** — AI agents can install and use it directly.
+
+### Download for AI Agents
+
+**SKILL.md** (direct install):
+```
+https://github.com/clawvader-tech/smart-money-pulse/raw/refs/heads/main/.agents/skills/smart-money-pulse/SKILL.md
+```
+
+**Full package** (clone):
+```bash
+git clone https://github.com/clawvader-tech/smart-money-pulse.git
+```
+
+### MCP Server Tools
+
+| Tool | Description |
+|------|-------------|
+| `get_signals(chain, top_n)` | Ranked trading signals |
+| `get_positions()` | Open positions |
+| `execute_trade(token, action, amount_usd)` | Execute trade |
+| `get_trade_history(limit)` | Recent trades |
+| `get_system_status()` | System health |
+| `get_wallet_balance()` | Wallet balance |
+
+### Example Agent Usage
+
+```python
+# Via CLI
+python smart_money_pulse.py --chain base --top-n 5 --format json
+
+# Via MCP (connect your agent to mcp_server.py on port 8080)
+# Tools: get_signals, get_positions, execute_trade, get_wallet_balance
+```
+
 ## Files
 
 ```
