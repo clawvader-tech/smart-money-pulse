@@ -11,7 +11,7 @@
 
 ### 1. Token Contract Deployment ❌
 **Status:** NOT DEPLOYED  
-**Current State:** Address 0xc800D7A993deb997E46B4cAA25Fadee22e8b8c2E is an EOA (Externally Owned Account) with $38.44 balance - NOT a token contract
+**Current State:** Address 0x...MASKED... is an EOA (Externally Owned Account) with $38.44 balance - NOT a token contract
 
 **Required Actions:**
 - [ ] Deploy $NEXUS token contract to Base Sepolia testnet
