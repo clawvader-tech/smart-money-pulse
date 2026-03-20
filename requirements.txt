@@ -1,0 +1,11 @@
+# Python dependencies for Smart Money Pulse Monitor
+# No external packages required - uses only standard library!
+
+# Optional: For enhanced output formatting
+# rich>=13.0.0
+
+# Optional: For data visualization
+# matplotlib>=3.7.0
+
+# Optional: For async API calls (future enhancement)
+# aiohttp>=3.8.0
