@@ -3,13 +3,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Smart Money Pulse Monitor — Track Whale Wallets via CLI</title>
-<meta name="description" content="AI-powered CLI that tracks whale and institutional wallet flows across Base, Ethereum, Solana, Arbitrum and Optimism. Built for Nansen CLI Build Challenge 2026.">
+<title>Smart Money Pulse Monitor — Nansen CLI Build Challenge 2026</title>
+<meta name="description" content="AI-powered CLI that tracks whale and institutional wallet flows across 5 chains. Built for the Nansen CLI Build Challenge 2026.">
 <meta property="og:title" content="Smart Money Pulse Monitor">
-<meta property="og:description" content="Track whale wallets across 5 chains in real-time via CLI. Powered by Nansen AI.">
+<meta property="og:description" content="Track whale wallets via CLI. MCP server + x402 payments + CEO dashboard. Multi-chain. Autonomous.">
+<meta property="og:image" content="https://v3b.fal.media/files/b/0a92fff9/OkJz5Lue_PybluPhXiVed_91cef73f5e2b4c90a3e6571e8e3b8a8b.jpg">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--bg:#08080f;--bg2:#0d0d1a;--bg3:#12121f;--gold:#d4af37;--gold2:#f0d060;--gold-dim:rgba(212,175,55,0.12);--cyan:#00d4ff;--green:#00e676;--red:#ff5252;--text:#e8e8f0;--text2:#8888a0;--text3:#505060}
+:root{--bg:#08080f;--bg2:#0d0d1a;--bg3:#12121f;--gold:#d4af37;--gold2:#f0d060;--cyan:#00d4ff;--green:#00e676;--red:#ff5252;--text:#e8e8f0;--text2:#8888a0;--text3:#505060}
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Inter',system-ui,sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
 a{color:var(--gold);text-decoration:none}
@@ -17,105 +18,100 @@ a{color:var(--gold);text-decoration:none}
 header{padding:16px 0;border-bottom:1px solid rgba(212,175,55,0.1);position:sticky;top:0;background:rgba(8,8,15,0.97);backdrop-filter:blur(12px);z-index:100}
 .header-inner{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px}
 .logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;color:var(--gold)}
-.logo-text{letter-spacing:-0.3px}
 .nav{display:flex;gap:24px;flex-wrap:wrap}
 .nav a{color:var(--text2);font-size:14px;font-weight:500;transition:color 0.2s}
 .nav a:hover{color:var(--gold)}
-.badge{display:inline-block;background:var(--gold-dim);border:1px solid rgba(212,175,55,0.3);color:var(--gold);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
-.hero{padding:80px 0 55px;text-align:center}
-.hero-badge{display:inline-flex;align-items:center;gap:6px;background:linear-gradient(135deg,rgba(212,175,55,0.12),rgba(212,175,55,0.04));border:1px solid rgba(212,175,55,0.35);color:var(--gold);padding:7px 18px;border-radius:24px;font-size:12px;font-weight:600;letter-spacing:0.5px;margin-bottom:28px}
-h1{font-size:clamp(38px,7vw,62px);font-weight:800;color:#fff;margin-bottom:14px;line-height:1.08;letter-spacing:-1.5px}
+.badge{display:inline-block;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.hero{position:relative;padding:0;overflow:hidden;max-height:520px}
+.hero-img{width:100%;height:100%;object-fit:cover;opacity:0.35}
+.hero-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(8,8,15,0.3) 0%,rgba(8,8,15,0.85) 80%,var(--bg) 100%)}
+.hero-content{position:absolute;bottom:0;left:0;right:0;padding:48px 28px 40px;text-align:center}
+.hero-badge{display:inline-flex;background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(212,175,55,0.05));border:1px solid rgba(212,175,55,0.4);color:var(--gold);padding:6px 18px;border-radius:24px;font-size:11px;font-weight:600;letter-spacing:1px;margin-bottom:20px}
+h1{font-size:clamp(32px,6vw,52px);font-weight:800;color:#fff;margin-bottom:10px;letter-spacing:-1px}
 h1 span{color:var(--gold)}
-.hero-sub{font-size:17px;color:var(--text2);max-width:520px;margin:0 auto 36px;line-height:1.7}
-.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:48px}
-.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 26px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;transition:all 0.2s;border:none}
+.hero-sub{font-size:15px;color:var(--text2);max-width:480px;margin:0 auto 28px}
+.btns{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:11px 24px;border-radius:8px;font-weight:600;font-size:14px;text-decoration:none;transition:all 0.2s;border:none;cursor:pointer}
 .btn-gold{background:var(--gold);color:#000}
-.btn-gold:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,175,55,0.22)}
-.btn-outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.1)}
+.btn-gold:hover{background:var(--gold2);transform:translateY(-1px);box-shadow:0 8px 24px rgba(212,175,55,0.2)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid rgba(255,255,255,0.12)}
 .btn-outline:hover{background:rgba(255,255,255,0.05)}
-.terminal{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;max-width:680px;margin:0 auto 48px;box-shadow:0 24px 80px rgba(0,0,0,0.6)}
-.terminal-bar{background:#13132a;padding:12px 18px;display:flex;align-items:center;gap:8px}
-.dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.terminal{background:var(--bg2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;overflow:hidden;max-width:640px;margin:32px auto 0}
+.terminal-bar{background:#13132a;padding:11px 16px;display:flex;align-items:center;gap:8px}
+.dot{width:11px;height:11px;border-radius:50%;flex-shrink:0}
 .dot-r{background:#ff5f56}.dot-y{background:#ffbd2e}.dot-g{background:#27c93f}
-.term-title{color:var(--text3);font-size:12px;font-family:'Courier New',monospace;margin-left:4px}
-.term-body{padding:18px 22px;font-family:'Courier New',monospace;font-size:13px;color:#8888b0;text-align:left;line-height:1.9}
-.t-cmd{color:var(--green)}.t-gold{color:var(--gold)}.t-cyan{color:var(--cyan)}.t-dim{color:#3a3a55}.t-buy{color:var(--green)}.t-sell{color:var(--red)}
-.stats{display:flex;justify-content:center;flex-wrap:wrap;margin-bottom:60px;border:1px solid rgba(255,255,255,0.05);border-radius:12px;overflow:hidden;background:var(--bg2);max-width:580px;margin-left:auto;margin-right:auto}
-.stat{flex:1;min-width:110px;padding:16px 18px;text-align:center;border-right:1px solid rgba(255,255,255,0.05)}
-.stat:last-child{border-right:none}
-.stat-v{font-size:20px;font-weight:700;color:var(--gold);margin-bottom:3px}
-.stat-l{font-size:11px;color:var(--text2);text-transform:uppercase;letter-spacing:0.5px}
-.section{padding:72px 0}
+.term-title{color:var(--text3);font-size:11px;font-family:'Courier New',monospace;margin-left:4px}
+.term-body{padding:16px 20px;font-family:'Courier New',monospace;font-size:12.5px;color:#7777a0;text-align:left;line-height:1.9}
+.t-cmd{color:var(--green)}.t-dim{color:#3a3a55}.t-buy{color:var(--green)}.t-sell{color:var(--red)}.t-cyan{color:var(--cyan)}
+@keyframes live{0%,100%{opacity:1}50%{opacity:0.35}}
+.live{animation:live 2s ease-in-out infinite;display:inline-block;width:6px;height:6px;border-radius:50%;background:#00e676;margin-right:5px}
+.section{padding:64px 0}
 .section-alt{background:var(--bg2)}
 .label{color:var(--gold);font-size:11px;font-weight:700;letter-spacing:2.5px;text-transform:uppercase;margin-bottom:10px}
-h2{font-size:30px;font-weight:700;color:#fff;margin-bottom:12px}
-.desc{color:var(--text2);font-size:15px;max-width:480px;margin-bottom:40px;line-height:1.7}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(265px,1fr));gap:14px}
-.card{background:var(--bg3);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:24px;transition:border-color 0.2s,transform 0.2s}
+h2{font-size:28px;font-weight:700;color:#fff;margin-bottom:10px}
+.desc{color:var(--text2);font-size:15px;max-width:460px;margin-bottom:36px;line-height:1.7}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(255px,1fr));gap:14px}
+.card{background:var(--bg3);border:1px solid rgba(255,255,255,0.04);border-radius:12px;padding:22px;transition:border-color 0.2s,transform 0.2s}
 .card:hover{border-color:rgba(212,175,55,0.25);transform:translateY(-2px)}
-.card-icon{font-size:26px;margin-bottom:13px}
-.card h3{font-size:15px;font-weight:600;color:#fff;margin-bottom:6px}
+.card-icon{font-size:24px;margin-bottom:12px}
+.card h3{font-size:14px;font-weight:600;color:#fff;margin-bottom:5px}
 .card p{font-size:13px;color:var(--text2);line-height:1.65}
-table{width:100%;border-collapse:collapse;margin-top:26px;background:var(--bg3);border-radius:11px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
-th{padding:13px 16px;text-align:left;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.05);background:rgba(255,255,255,0.01)}
-td{padding:12px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03);color:var(--text)}
+table{width:100%;border-collapse:collapse;margin-top:22px;background:var(--bg3);border-radius:10px;overflow:hidden;border:1px solid rgba(255,255,255,0.04)}
+th{padding:12px 14px;text-align:left;font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.8px;color:var(--text2);border-bottom:1px solid rgba(255,255,255,0.05)}
+td{padding:11px 14px;font-size:12.5px;border-bottom:1px solid rgba(255,255,255,0.03)}
 tr:last-child td{border-bottom:none}
-tr:hover td{background:rgba(255,255,255,0.012)}
-.cbadge{display:inline-flex;padding:3px 10px;border-radius:14px;font-size:11px;font-weight:600}
+tr:hover td{background:rgba(255,255,255,0.01)}
+.cb{display:inline-flex;padding:3px 9px;border-radius:12px;font-size:10px;font-weight:600}
 .cb-base{background:rgba(0,212,255,0.1);color:#00d4ff}
 .cb-eth{background:rgba(98,126,234,0.12);color:#8090e8}
 .cb-sol{background:rgba(153,69,255,0.1);color:#a070ff}
 .cb-arb{background:rgba(40,160,240,0.1);color:#28a0f0}
 .cb-op{background:rgba(255,60,60,0.1);color:#ff5050}
-@keyframes live{0%,100%{opacity:1}50%{opacity:0.35}}
-.live-dot{animation:live 2s ease-in-out infinite;display:inline-block;width:7px;height:7px;border-radius:50%;background:#00e676;margin-right:5px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-.code{background:#06060e;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:18px 20px;font-family:'Courier New',monospace;font-size:12.5px;overflow-x:auto}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:20px;align-items:start}
+.code{background:#06060e;border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:16px 18px;font-family:'Courier New',monospace;font-size:12px;overflow-x:auto}
 .comment{color:#3a3a55}.code-cmd{color:var(--green)}.flag{color:var(--cyan)}
-.step{display:flex;gap:14px;margin-bottom:22px;align-items:flex-start}
-.step-num{display:flex;align-items:center;justify-content:center;width:26px;height:26px;background:var(--gold-dim);border:1px solid rgba(212,175,55,0.3);color:var(--gold);border-radius:50%;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
-.step h3{font-size:15px;font-weight:600;color:#fff;margin-bottom:5px}
-.step p{font-size:13px;color:var(--text2)}
-.arch{background:#06060e;border:1px solid rgba(212,175,55,0.12);border-radius:12px;padding:24px 26px;margin-top:24px;font-family:'Courier New',monospace;font-size:12px;color:#5050a0;text-align:left;overflow-x:auto;line-height:1.9}
-.arch-layer{color:var(--gold);font-weight:bold}
-.arch-comp{color:var(--cyan)}
-.arch-arrow{color:rgba(212,175,55,0.4)}
-.cta{padding:80px 0;text-align:center}
-.cta h2{font-size:34px;font-weight:700;color:#fff;margin-bottom:14px}
-.cta p{color:var(--text2);margin-bottom:30px;font-size:16px}
-footer{padding:34px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:center;color:var(--text3);font-size:13px}
-.footer-links{display:flex;gap:20px;justify-content:center;margin-bottom:12px;flex-wrap:wrap}
-.footer-links a{color:var(--text2);font-size:13px}
+.step{display:flex;gap:12px;margin-bottom:20px;align-items:flex-start}
+.step-n{display:flex;align-items:center;justify-content:center;width:24px;height:24px;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);color:var(--gold);border-radius:50%;font-size:11px;font-weight:700;flex-shrink:0;margin-top:1px}
+.step h3{font-size:14px;font-weight:600;color:#fff;margin-bottom:4px}
+.step p{font-size:12.5px;color:var(--text2)}
+.cta{padding:72px 0;text-align:center}
+.cta h2{font-size:30px;font-weight:700;color:#fff;margin-bottom:12px}
+.cta p{color:var(--text2);margin-bottom:28px;font-size:15px}
+.agents-card{background:linear-gradient(135deg,rgba(0,212,255,0.06),rgba(212,175,55,0.06));border:1px solid rgba(212,175,55,0.2);border-radius:14px;padding:28px;text-align:center}
+.agents-card h3{font-size:16px;font-weight:700;color:#fff;margin-bottom:8px}
+.agents-card p{font-size:13px;color:var(--text2);margin-bottom:16px}
+footer{padding:30px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:center;color:var(--text3);font-size:12px}
+.footer-links{display:flex;gap:18px;justify-content:center;margin-bottom:10px;flex-wrap:wrap}
+.footer-links a{color:var(--text2);font-size:12px}
 .footer-links a:hover{color:var(--gold)}
-@media(max-width:640px){.nav{display:none}.two-col{grid-template-columns:1fr}.stats{flex-direction:column}}
+@media(max-width:640px){.nav{display:none}.two{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 <header>
 <div class="container header-inner">
 <div class="logo">
-<svg width="28" height="28" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#d4af37" stroke-width="1.8"/><circle cx="14" cy="14" r="3" fill="#d4af37"/><line x1="14" y1="2" x2="14" y2="7" stroke="#d4af37" stroke-width="1.8"/><line x1="14" y1="21" x2="14" y2="26" stroke="#d4af37" stroke-width="1.8"/><line x1="2" y1="14" x2="7" y2="14" stroke="#d4af37" stroke-width="1.8"/><line x1="21" y1="14" x2="26" y2="14" stroke="#d4af37" stroke-width="1.8"/></svg>
-<span class="logo-text">Smart Money Pulse</span>
+<svg width="26" height="26" viewBox="0 0 28 28" fill="none"><circle cx="14" cy="14" r="12" stroke="#d4af37" stroke-width="1.8"/><circle cx="14" cy="14" r="3" fill="#d4af37"/><line x1="14" y1="2" x2="14" y2="7" stroke="#d4af37" stroke-width="1.8"/><line x1="14" y1="21" x2="14" y2="26" stroke="#d4af37" stroke-width="1.8"/><line x1="2" y1="14" x2="7" y2="14" stroke="#d4af37" stroke-width="1.8"/><line x1="21" y1="14" x2="26" y2="14" stroke="#d4af37" stroke-width="1.8"/></svg>
+Smart Money Pulse
 </div>
-<nav class="nav"><a href="#features">Features</a><a href="#chains">Chains</a><a href="#agents">AI Agents</a><a href="#quickstart">Quick Start</a><a href="#architecture">Architecture</a></nav>
+<nav class="nav"><a href="#features">Features</a><a href="#chains">Chains</a><a href="#quickstart">Quick Start</a><a href="#agents">AI Agents</a></nav>
 <span class="badge">NANSEN CLI 2026</span>
 </div>
 </header>
 
 <section class="hero">
-<div class="container">
+<img src="https://v3b.fal.media/files/b/0a92fff9/OkJz5Lue_PybluPhXiVed_91cef73f5e2b4c90a3e6571e8e3b8a8b.jpg" alt="Smart Money Pulse" class="hero-img">
+<div class="hero-overlay"></div>
+<div class="hero-content">
 <div class="hero-badge">NANSEN CLI BUILD CHALLENGE 2026</div>
-<h1>Smart Money<br><span>Pulse</span> Monitor</h1>
-<p class="hero-sub">Track whale and institutional wallet flows across 5 chains in real-time via CLI. AI-powered signal generation for traders and autonomous agents.</p>
+<h1>Smart Money <span>Pulse</span> Monitor</h1>
+<p class="hero-sub">Track whale and institutional wallet flows across 5 chains in real-time. AI-powered signals. MCP server. CEO dashboard. Built for autonomous trading.</p>
 <div class="btns">
 <a href="https://github.com/clawvader-tech/smart-money-pulse" class="btn btn-gold">View on GitHub</a>
 <a href="#quickstart" class="btn btn-outline">Get Started</a>
 </div>
 <div class="terminal">
-<div class="terminal-bar">
-<div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div>
-<span class="term-title">smart-money-pulse — bash</span>
-</div>
+<div class="terminal-bar"><div class="dot dot-r"></div><div class="dot dot-y"></div><div class="dot dot-g"></div><span class="term-title">smart-money-pulse — bash</span></div>
 <div class="term-body">
 <div><span class="t-cmd">$</span> python smart_money_pulse.py --chain base --top-n 5</div>
 <div><span class="t-dim">  Rank  Token      Flow (24h)      Smart Money</span></div>
@@ -125,14 +121,8 @@ footer{padding:34px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:cen
 <div>    3   <span class="t-sell">BRETT</span>    -$943,000      EXIT</div>
 <div>    4   <span class="t-buy">DEGEN</span>    +$521,000      ACTIVE</div>
 <div>    5   <span class="t-buy">VIRTUAL</span>  +$298,000      CAUTION</div>
-<div style="margin-top:10px"><span class="t-cyan">Confidence: 87%  |  Cycles: 56  |  </span><span class="live-dot"></span><span class="t-cyan">LIVE</span></div>
+<div style="margin-top:8px"><span class="t-cyan">Confidence: 87%  |  Cycles: 56  |  </span><span class="live"></span><span class="t-cyan">LIVE</span></div>
 </div>
-</div>
-<div class="stats">
-<div class="stat"><div class="stat-v">5</div><div class="stat-l">Chains</div></div>
-<div class="stat"><div class="stat-v">40+</div><div class="stat-l">Tokens</div></div>
-<div class="stat"><div class="stat-v">MCP</div><div class="stat-l">AI Agent Ready</div></div>
-<div class="stat"><div class="stat-v">x402</div><div class="stat-l">Crypto Payments</div></div>
 </div>
 </div>
 </section>
@@ -143,12 +133,12 @@ footer{padding:34px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:cen
 <h2>Everything you need to track smart money</h2>
 <p class="desc">From real-time CLI signals to AI agent integration — built for traders and developers who need an edge.</p>
 <div class="grid">
-<div class="card"><div class="card-icon">&#128200;</div><h3>Real-Time Signals</h3><p>Ranked trading opportunities with confidence scores, flow magnitudes, and smart money status. Updated continuously.</p></div>
-<div class="card"><div class="card-icon">&#129302;</div><h3>MCP Server</h3><p>Model Context Protocol integration — connect any AI agent (Claude, GPT, Gemini) to Atlas for autonomous trading decisions.</p></div>
-<div class="card"><div class="card-icon">&#128179;</div><h3>x402 Payments</h3><p>Native crypto micropayments. Agents pay per API call. No accounts, no subscriptions — just usage-based pricing.</p></div>
-<div class="card"><div class="card-icon">&#128187;</div><h3>CEO Dashboard</h3><p>World-class HTML dashboard with signal feed, trade history, positions, system health, and OKX wallet widget.</p></div>
-<div class="card"><div class="card-icon">&#128279;</div><h3>Multi-Chain</h3><p>Base, Ethereum, Solana, Arbitrum, and Optimism. All major L2s and DeFi chains supported.</p></div>
-<div class="card"><div class="card-icon">&#128274;</div><h3>Secure by Design</h3><p>No API keys in code. Environment-based config. OKX wallet integration with local signing. Your keys stay yours.</p></div>
+<div class="card"><div class="card-icon">&#128200;</div><h3>Real-Time Signals</h3><p>Ranked trading opportunities with confidence scores, flow magnitudes, and smart money status. Updated every 5 minutes.</p></div>
+<div class="card"><div class="card-icon">&#129302;</div><h3>MCP Server</h3><p>Model Context Protocol integration — connect any AI agent (Claude, GPT, Gemini, Codex) for autonomous trading.</p></div>
+<div class="card"><div class="card-icon">&#128179;</div><h3>x402 Payments</h3><p>Native crypto micropayments. Agents pay per API call. No accounts, no subscriptions.</p></div>
+<div class="card"><div class="card-icon">&#128187;</div><h3>CEO Dashboard</h3><p>World-class HTML dashboard — signal feed, trade history, positions, system health, wallet widget.</p></div>
+<div class="card"><div class="card-icon">&#128279;</div><h3>Multi-Chain</h3><p>Base, Ethereum, Solana, Arbitrum, and Optimism. All major L2s supported.</p></div>
+<div class="card"><div class="card-icon">&#128274;</div><h3>Secure by Design</h3><p>No API keys in code. Environment config only. OKX wallet with local signing.</p></div>
 </div>
 </div>
 </section>
@@ -161,11 +151,11 @@ footer{padding:34px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:cen
 <table>
 <thead><tr><th>Chain</th><th>Status</th><th>Key Tokens</th></tr></thead>
 <tbody>
-<tr><td><span class="cbadge cb-base">Base</span></td><td><span class="live-dot"></span> Primary</td><td>DEGEN, AERO, BRETT, PENGU, VIRTUAL, cbBTC, WETH, USDC</td></tr>
-<tr><td><span class="cbadge cb-eth">Ethereum</span></td><td>Full</td><td>WBTC, stETH, LDO, UNI, LINK, AAVE, ARB, OP, HYPE</td></tr>
-<tr><td><span class="cbadge cb-sol">Solana</span></td><td>Full</td><td>WIF, BONK, POPCAT, MEW, BOME, WEN, JTO, JUP</td></tr>
-<tr><td><span class="cbadge cb-arb">Arbitrum</span></td><td>Full</td><td>ETH, USDC, ARB</td></tr>
-<tr><td><span class="cbadge cb-op">Optimism</span></td><td>Full</td><td>ETH, USDC, OP</td></tr>
+<tr><td><span class="cb cb-base">Base</span></td><td>Primary</td><td>DEGEN, AERO, BRETT, PENGU, VIRTUAL, cbBTC, WETH, USDC</td></tr>
+<tr><td><span class="cb cb-eth">Ethereum</span></td><td>Full</td><td>WBTC, stETH, LDO, UNI, LINK, AAVE, ARB, OP</td></tr>
+<tr><td><span class="cb cb-sol">Solana</span></td><td>Full</td><td>WIF, BONK, POPCAT, MEW, BOME, JTO, JUP</td></tr>
+<tr><td><span class="cb cb-arb">Arbitrum</span></td><td>Full</td><td>ETH, USDC, ARB</td></tr>
+<tr><td><span class="cb cb-op">Optimism</span></td><td>Full</td><td>ETH, USDC, OP</td></tr>
 </tbody>
 </table>
 </div>
@@ -176,91 +166,47 @@ footer{padding:34px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:cen
 <div class="label">Quick Start</div>
 <h2>Up and running in 60 seconds</h2>
 <p class="desc">One command to install. One command to run.</p>
-<div class="two-col">
+<div class="two">
 <div>
-<div class="step"><div class="step-num">1</div><div class="step-content"><h3>Clone the repo</h3><p>Get the latest code from GitHub.</p></div></div>
-<div class="step"><div class="step-num">2</div><div class="step-content"><h3>Install dependencies</h3><p>pip install -r requirements.txt</p></div></div>
-<div class="step"><div class="step-num">3</div><div class="step-content"><h3>Set your API key</h3><p>cp env.example .env # Edit with your NANSEN_API_KEY</p></div></div>
-<div class="step"><div class="step-num">4</div><div class="step-content"><h3>Run!</h3><p>python smart_money_pulse.py --chain base --top-n 10</p></div></div>
+<div class="step"><div class="step-n">1</div><div class="step"><h3>Clone the repo</h3><p>git clone https://github.com/clawvader-tech/smart-money-pulse.git</p></div></div>
+<div class="step"><div class="step-n">2</div><div class="step"><h3>Install dependencies</h3><p>pip install -r requirements.txt</p></div></div>
+<div class="step"><div class="step-n">3</div><div class="step"><h3>Configure</h3><p>cp env.example .env # add your NANSEN_API_KEY</p></div></div>
+<div class="step"><div class="step-n">4</div><div class="step"><h3>Run!</h3><p>python smart_money_pulse.py --chain base --top-n 10</p></div></div>
 </div>
 <div class="code">
-<div><span class="comment"># 1. Clone</span></div>
+<div><span class="comment"># One-liner</span></div>
 <div><span class="code-cmd">git clone</span> https://github.com/clawvader-tech/smart-money-pulse.git</div>
 <div><span class="code-cmd">cd</span> smart-money-pulse</div>
-<div style="margin-top:12px"><span class="comment"># 2. Install</span></div>
 <div><span class="code-cmd">pip install</span> -r requirements.txt</div>
-<div style="margin-top:12px"><span class="comment"># 3. Configure</span></div>
 <div><span class="code-cmd">cp</span> env.example .env</div>
-<div><span class="comment"># Edit .env with your NANSEN_API_KEY</span></div>
-<div style="margin-top:12px"><span class="comment"># 4. Run</span></div>
-<div><span class="code-cmd">python</span> smart_money_pulse.py <span class="flag">--chain</span> base <span class="flag">--top-n</span> 10</div>
+<div><span class="comment"># Run</span></div>
+<div><span class="code-cmd">python</span> smart_money_pulse.py <span class="flag">--chain</span> base</div>
 </div>
 </div>
 </div>
 </section>
-
-<section class="section section-alt" id="architecture">
-<div class="container">
-<div class="label">Architecture</div>
-<h2>How it works</h2>
-<p class="desc">A modular system designed for reliability and extensibility.</p>
-<div class="arch">
-<span class="arch-layer">[DATA SOURCES]</span>      <span class="arch-comp">CoinGecko, Nansen API, OKX OnchainOS</span><br>
-<span class="arch-arrow">         |</span><br>
-<span class="arch-layer">[LLM REASONING]</span>     <span class="arch-comp">minimax-m2.7 via OpenRouter</span><br>
-<span class="arch-arrow">         |</span><br>
-<span class="arch-layer">[SIGNAL ENGINE]</span>     <span class="arch-comp">Scoring, confidence, ranking</span><br>
-<span class="arch-arrow">         |</span><br>
-<span class="arch-layer">[OUTPUTS]</span>           <span class="arch-comp">CLI, Dashboard, MCP, x402</span>
-</div>
-</div>
-</section>
-
-<section class="section">
-<div class="container">
-<div class="label">Files</div>
-<h2>What's in the repo</h2>
-<p class="desc">Clean, focused codebase for the Nansen CLI Build Challenge.</p>
-<div class="grid">
-<div class="card"><div class="card-icon">&#128196;</div><h3>smart_money_pulse.py</h3><p>Main CLI tool. Entry point for all operations.</p></div>
-<div class="card"><div class="card-icon">&#129302;</div><h3>mcp_server.py</h3><p>Model Context Protocol server for AI agents.</p></div>
-<div class="card"><div class="card-icon">&#128179;</div><h3>payment_gateway.py</h3><p>x402 crypto payment gateway.</p></div>
-<div class="card"><div class="card-icon">&#128187;</div><h3>dashboard.html</h3><p>CEO dashboard — open in browser.</p></div>
-<div class="card"><div class="card-icon">&#128220;</div><h3>chain_data.py</h3><p>Multi-chain token registry.</p></div>
-<div class="card"><div class="card-icon">&#128196;</div><h3>README.md</h3><p>Full documentation and usage guide.</p></div>
-</div>
-</div>
-</section>
-
 
 <section class="section section-alt" id="agents">
 <div class="container">
 <div class="label">AI Agent Integration</div>
 <h2>agentskills.io compliant</h2>
-<p class="desc">Download the agent skill and connect Smart Money Pulse to any AI agent via MCP Server.</p>
-<div class="grid">
-<div class="card">
+<p class="desc">Built for AI agents. Connect any MCP-compatible agent to Smart Money Pulse.</p>
+<div class="two">
+<div class="agents-card">
 <div class="card-icon">&#129302;</div>
-<h3>MCP Server</h3>
-<p>Model Context Protocol tools: get_signals, get_positions, execute_trade, and more.</p>
+<h3>Install as a Skill</h3>
+<p>AI agents can install this skill directly from GitHub and use it to query whale flows autonomously.</p>
+<a href="https://github.com/clawvader-tech/smart-money-pulse/raw/refs/heads/main/.agents/skills/smart-money-pulse/SKILL.md" class="btn btn-gold" style="margin-top:8px">Download SKILL.md</a>
 </div>
-<div class="card">
-<div class="card-icon">&#128187;</div>
-<h3>AI Agent Ready</h3>
-<p>Works with Claude, GPT, Gemini, Codex, and any MCP-compatible agent.</p>
+<div>
+<div class="step" style="margin-bottom:14px"><div class="step-n">MCP</div><div class="step"><h3>Model Context Protocol</h3><p>get_signals, get_positions, execute_trade, get_wallet_balance — ready for any AI agent.</p></div></div>
+<div class="step" style="margin-bottom:14px"><div class="step-n">x402</div><div class="step"><h3>Crypto Micropayments</h3><p>Agents pay per API call. No accounts, no subscriptions.</p></div></div>
+<div class="step"><div class="step-n">CLI</div><div class="step"><h3>Direct Python</h3><p>python smart_money_pulse.py --chain base --format json</p></div></div>
 </div>
-<div class="card">
-<div class="card-icon">&#128179;</div>
-<h3>x402 Payments</h3>
-<p>Autonomous agents pay per API call. No accounts needed.</p>
-</div>
-</div>
-<div style="margin-top:28px">
-<a href="https://github.com/clawvader-tech/smart-money-pulse/raw/refs/heads/main/.agents/skills/smart-money-pulse/SKILL.md" class="btn btn-gold" style="margin-right:12px">Download SKILL.md</a>
-<a href="https://github.com/clawvader-tech/smart-money-pulse/archive/refs/heads/main.zip" class="btn btn-outline">Download Full Package</a>
 </div>
 </div>
 </section>
+
 <section class="cta">
 <div class="container">
 <h2>Ready to track smart money?</h2>
@@ -278,6 +224,5 @@ footer{padding:34px 0;border-top:1px solid rgba(255,255,255,0.04);text-align:cen
 <p>Built for the <strong>Nansen CLI Build Challenge 2026</strong> | MIT License</p>
 </div>
 </footer>
-
 </body>
 </html>
